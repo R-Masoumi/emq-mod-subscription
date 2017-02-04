@@ -47,7 +47,6 @@ on_client_connected(?CONNACK_ACCEPT, Client = #mqtt_client{client_id  = ClientId
                       AppendedList;
                     true ->
                       TopicTable
-                end,
                   end;
                 true ->
                   TopicTable
