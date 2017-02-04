@@ -45,10 +45,10 @@ on_client_connected(?CONNACK_ACCEPT, Client = #mqtt_client{client_id  = ClientId
                   case listAppend(TopicTable, OurTopics) of
                     {ok, AppendedList} ->
                       AppendedList;
-                    true ->
+                    {error} ->
                       TopicTable
                   end;
-                true ->
+                {error,Reason} ->
                   TopicTable
                 end,
     emqttd_client:subscribe(ClientPid, FinalList),
