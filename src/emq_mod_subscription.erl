@@ -40,13 +40,15 @@ on_client_connected(?CONNACK_ACCEPT, Client = #mqtt_client{client_id  = ClientId
     Replace = fun(Topic) -> rep(<<"%u">>, Username, rep(<<"%c">>, ClientId, Topic)) end,
     TopicTable = [{Replace(Topic), Qos} || {Topic, Qos} <- Topics],
     {ok, Redis} = eredis:start_link(),
-    {ok, OurTopics} = eredis:q(Redis, ["sMembers", "mqtt_sub:"++Username]),
-    FinalList = case listAppend(TopicTable,OurTopics)  of
-    {ok,AppendedList} ->
-      AppendedList;
-    {error} ->
-      TopicTable
-    end,
+    FinalList = case eredis:q(Redis, ["sMembers", "mqtt_sub:" ++ Username]) of
+                {ok, OurTopics} ->
+                  case listAppend(TopicTable, OurTopics) of
+                    {ok, AppendedList} ->
+                      AppendedList
+                  end;
+                true ->
+                  TopicTable
+                end,
     emqttd_client:subscribe(ClientPid, FinalList),
     {ok, Client};
 
