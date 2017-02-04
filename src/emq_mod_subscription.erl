@@ -43,8 +43,10 @@ on_client_connected(?CONNACK_ACCEPT, Client = #mqtt_client{client_id  = ClientId
     FinalList = case eredis:q(Redis, ["sMembers", "mqtt_sub:" ++ Username]) of
                 {ok, OurTopics} ->
                   case listAppend(TopicTable, OurTopics) of
-                    {ok, AppendedList} ->
+                    {ok, AppendedList} when is_list(AppendedList) ->
                       AppendedList;
+                    {ok,_} ->
+                      TopicTable;
                     {error} ->
                       TopicTable
                   end;
