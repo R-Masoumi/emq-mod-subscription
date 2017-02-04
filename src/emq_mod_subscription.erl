@@ -62,9 +62,6 @@ unload() ->
 
 listAppend(DefaultTopic,NewTopics) when length(NewTopics) > 0 ->
   ListLast = lists:last(NewTopics),
-  io:format("IN LOOP : ~n"),
-  io:format("THIS VALUE IS ~w ~n",[ListLast]),
-  io:format("Length Is ~w ~n",[length(NewTopics) - 1]),
   LastDropped = lists:droplast(NewTopics),
   Result = case listAppend(DefaultTopic,LastDropped) of
              {ok,NewList} ->
